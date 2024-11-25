@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 export default function SingUpInterface() {
   return (
     <>
-      <Container></Container>
+      <Container>
+        <h1 className="text-3xl">micro peni</h1>
+      </Container>
     </>
   );
 }
