@@ -17,21 +17,6 @@ export default function PostCreationInterface() {
   const [message, setMessage] = useState("");
   const [preview, setPreview] = useState(null);
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-
-    // Generate a preview using FileReader
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result);
-    };
-    if (selectedFile) {
-      reader.readAsDataURL(selectedFile);
-    } else {
-      setPreview(null);
-    }
-  };
   const createPost = async () => {
     if (!file) {
       setMessage("Please select a file first!");
@@ -58,10 +43,29 @@ export default function PostCreationInterface() {
     //   setMessage("Error uploading file.");
     // }
   };
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Generate a preview using FileReader
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result);
+    };
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreview(null);
+    }
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Typography variant="h4">Create Post</Typography>
+        <Typography variant="h2" sx={{ borderBottom: "2px solid #000000" }}>
+          Create Post
+        </Typography>
         <TextField
           id="outlined-basic"
           variant="outlined"
@@ -80,7 +84,9 @@ export default function PostCreationInterface() {
           }}
         >
           <Box sx={{ width: "80%" }}>
-            <Typography>Upload Image</Typography>
+            <Typography variant="h4" sx={{ mb: 1 }}>
+              Upload Image
+            </Typography>
             <Input type="file" accept="image/*" onChange={handleFileChange} />
           </Box>
 
