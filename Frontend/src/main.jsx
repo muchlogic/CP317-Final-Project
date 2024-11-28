@@ -22,33 +22,29 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <GlobalInterface />,
-    children: [{ path: "/create-post", element: <PostCreationInterface /> }],
-  },
-
-  {
-    path: "/sign-up",
-    element: <SingUpInterface />,
     children: [
-      // { path: "/", element: <HomeDefault /> },
-      // { path: "/join", element: <Join /> },
-      // { path: "/host", element: <Host /> },
+      {
+        path: "/sign-up",
+        element: <SingUpInterface />,
+      },
+      {
+        path: "/login",
+        element: <LoginInterface />,
+      },
+      { path: "/create-post", element: <PostCreationInterface /> },
+      {
+        path: "/view-post",
+        element: <ViewPostInterface />,
+      },
+      {
+        path: "/profile",
+        element: <ProfileInterface />,
+      },
+      {
+        path: "/edit-profile",
+        element: <EditProfileInterface />,
+      },
     ],
-  },
-  {
-    path: "/login",
-    element: <LoginInterface />,
-  },
-  {
-    path: "/profile",
-    element: <ProfileInterface />,
-  },
-  {
-    path: "/edit-profile",
-    element: <EditProfileInterface />,
-  },
-  {
-    path: "/view-post",
-    element: <ViewPostInterface />,
   },
 ]);
 
