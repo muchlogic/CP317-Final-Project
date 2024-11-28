@@ -4,26 +4,24 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-
 export default function GlobalInterface() {
   return (
     <>
-      <Box sx={{ bgcolor: "brown" }} className="bg-[.../public/background.jpg]">
+      <Box sx={{}} className="bg-[url(./public/background.jpg)]">
         <Container
           maxWidth="md"
           sx={{
             position: "relative",
-            minHeight: "100vh",
             bgcolor: "white",
           }}
           disableGutters
         >
-          <Box sx={{ p: 2, minHeight: "92vh" }}>
+          <Box sx={{ px: 2, pb: 2, mb: "8vh" }}>
             <Outlet />
           </Box>
           <Box
             sx={{
-              position: "sticky",
+              position: "fixed",
               left: 0,
               bottom: 0,
               width: "100%",

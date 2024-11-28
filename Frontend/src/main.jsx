@@ -13,7 +13,7 @@ import PostCreationInterface from "./routes/ContentManagement/PostCreationInterf
 
 const theme = createTheme({
   typography: {
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "Wintry, Wintry, sans-serif",
   },
 });
