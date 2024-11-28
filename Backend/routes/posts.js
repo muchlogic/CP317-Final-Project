@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const router = express.Router();
 const {
   queryUploadPost,
@@ -6,16 +7,19 @@ const {
   queryDeletePost,
 } = require("../postgres");
 
-router.post("/upload", async (req, res) => {
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post("/upload", upload.single("image"), async (req, res) => {
   try {
-    const { postTitle, description, nutritionFacts, image, username } =
-      req.body;
+    const { buffer, mimetype } = req.file;
+    const { postTitle, description, nutritionFacts, username } = req.body;
 
     await queryUploadPost(
       postTitle,
       description,
       nutritionFacts,
-      image,
+      buffer,
+      mimetype,
       username
     );
 

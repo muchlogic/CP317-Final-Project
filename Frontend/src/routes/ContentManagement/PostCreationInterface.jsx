@@ -9,39 +9,36 @@ import {
 import { useState, useEffect } from "react";
 
 export default function PostCreationInterface() {
-  const [title, setTitle] = useState("");
+  const [postTitle, setPostTitle] = useState("");
   const [description, setDescription] = useState("");
   const [nutritionFacts, setNutritionFacts] = useState("");
-
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState("");
   const [preview, setPreview] = useState(null);
 
   const createPost = async () => {
-    if (!file) {
-      setMessage("Please select a file first!");
-      return;
-    }
+    const jsonData = new FormData();
+    jsonData.append("image", file);
+    jsonData.append("postTitle", postTitle);
+    jsonData.append("description", description);
+    jsonData.append("nutritionFacts", nutritionFacts);
+    jsonData.append("username", "temp");
 
-    const formData = new FormData();
-    formData.append("image", file);
-
-    // try {
-    //   const response = await fetch("http://localhost:5000/upload", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     setMessage(data.message);
-    //   } else {
-    //     setMessage("Error uploading file.");
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    //   setMessage("Error uploading file.");
-    // }
+    fetch("http://localhost:3000/posts/upload", {
+      method: "POST",
+      body: jsonData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to create post");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleFileChange = (event) => {
@@ -60,6 +57,24 @@ export default function PostCreationInterface() {
     }
   };
 
+  const test = async () => {
+    fetch(`http://localhost:3000/global/retrieve-by-username/temp`, {
+      method: "GET",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to get post");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -70,8 +85,8 @@ export default function PostCreationInterface() {
           id="outlined-basic"
           variant="outlined"
           label="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={postTitle}
+          onChange={(e) => setPostTitle(e.target.value)}
           sx={{ width: "40%" }}
         />
         <Box
@@ -107,6 +122,7 @@ export default function PostCreationInterface() {
           onChange={(e) => setDescription(e.target.value)}
           sx={{ width: "100%" }}
         />
+
         <TextField
           id="outlined-basic"
           variant="outlined"
@@ -124,6 +140,15 @@ export default function PostCreationInterface() {
           onClick={() => createPost()}
         >
           Publish Post
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{}}
+          onClick={() => test()}
+        >
+          Test
         </Button>
       </Box>
     </>

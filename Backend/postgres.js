@@ -56,7 +56,7 @@ const queryEditProfile = async (username, biography, newPicture) => {
 };
 
 //////////////// global?
-const queryRetrievePosts = async (username) => {
+const queryRetrievePostsbyUsername = async (username) => {
   try {
     const query = "SELECT * FROM posts WHERE username = $1";
     const values = [username];
@@ -74,13 +74,22 @@ const queryUploadPost = async (
   description,
   nutritionFacts,
   image,
+  mimetype,
   username
 ) => {
   try {
     const query =
-      "INSERT INTO posts(title, description, nutritionFacts, image, username) VALUES ($1,$2,$3,$4)";
-    const values = [postTitle, description, nutritionFacts, image, username];
+      "INSERT INTO posts(title, description, nutritionFacts, image, mimetype, username) VALUES ($1,$2,$3,$4,$5,$6)";
+    const values = [
+      postTitle,
+      description,
+      nutritionFacts,
+      image,
+      mimetype,
+      username,
+    ];
     const result = await client.query(query, values);
+    console.log("Uploaded post");
   } catch (err) {
     console.error("Error executing query", err);
   }
@@ -160,4 +169,5 @@ module.exports = {
   queryUploadPost,
   queryUpdatePost,
   queryDeletePost,
+  queryRetrievePostsbyUsername,
 };

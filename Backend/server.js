@@ -13,8 +13,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+const globalRouter = require("./routes/global");
+app.use("/global", globalRouter);
+
 const userRouter = require("./routes/user");
 app.use("/user", userRouter);
+
+const postsRouter = require("./routes/posts");
+app.use("/posts", postsRouter);
 
 const server = http.createServer(app);
 
