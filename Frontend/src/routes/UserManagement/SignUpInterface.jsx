@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 export default function SingUpInterface() {
   return (
     <>
-      <Container>
+
+      <Container className="flex justify-center items-center h-[100vh]">
+
       </Container>
     </>
   );
