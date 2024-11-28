@@ -32,7 +32,7 @@ export default function PostCreationInterface() {
       setPreview(null);
     }
   };
-  const handleUpload = async () => {
+  const createPost = async () => {
     if (!file) {
       setMessage("Please select a file first!");
       return;
@@ -83,7 +83,6 @@ export default function PostCreationInterface() {
             <Typography>Upload Image</Typography>
             <Input type="file" accept="image/*" onChange={handleFileChange} />
           </Box>
-          {/* <button onClick={handleUpload}>Upload</button> */}
 
           <img
             src={preview}
@@ -116,7 +115,7 @@ export default function PostCreationInterface() {
           variant="contained"
           color="primary"
           sx={{}}
-          //   onClick={() => addDeckToDB()}
+          onClick={() => createPost()}
         >
           Publish Post
         </Button>
