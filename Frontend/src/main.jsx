@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ViewPostInterface from "./routes/SocialInteraction/ViewPostInterface";
 import SingUpInterface from "./routes/UserManagement/SignUpInterface";
 import LoginInterface from "./routes/UserManagement/LoginInterface";
 import ProfileInterface from "./routes/UserManagement/ProfileInterface";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/edit-self-profile",
     element: <EditProfileInterface />,
+  },
+  {
+    path: "/view-post",
+    element: <ViewPostInterface />,
   },
 ]);
 
