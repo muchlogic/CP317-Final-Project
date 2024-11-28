@@ -1,6 +1,5 @@
 require("dotenv").config();
 const { Client } = require("pg"); // postgres
-const { post } = require("./routes/user");
 
 const client = new Client({
   user: `${process.env.POSTGRES_USERNAME}`,
