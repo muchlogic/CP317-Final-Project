@@ -10,6 +10,7 @@ export default {
     },
     fontFamily: {
       WintryFont: ["Wintry", "sans-serif"],
+      Penlike: ["Penlike", "sans-serif"],
     },
   },
   plugins: [],
