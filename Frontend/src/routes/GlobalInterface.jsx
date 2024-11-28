@@ -8,7 +8,7 @@ import { Outlet } from "react-router-dom";
 export default function GlobalInterface() {
   return (
     <>
-      <Box sx={{ bgcolor: "brown" }}>
+      <Box sx={{ bgcolor: "brown" }} className="bg-[.../public/background.jpg]">
         <Container
           maxWidth="md"
           sx={{
@@ -18,7 +18,7 @@ export default function GlobalInterface() {
           }}
           disableGutters
         >
-          <Box sx={{ p: 2 }}>
+          <Box sx={{ p: 2, minHeight: "92vh" }}>
             <Outlet />
           </Box>
           <Box
