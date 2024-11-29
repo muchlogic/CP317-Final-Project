@@ -10,6 +10,7 @@ import ProfileInterface from "./routes/UserManagement/ProfileInterface";
 import EditProfileInterface from "./routes/UserManagement/EditProfileInterface";
 import GlobalInterface from "./routes/GlobalInterface";
 import PostCreationInterface from "./routes/ContentManagement/PostCreationInterface";
+import MainFeedInterface from "./routes/SocialInteraction/MainFeedInterface";
 
 const theme = createTheme({
   typography: {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <GlobalInterface />,
     children: [
+      {
+        path: "/",
+        element: <MainFeedInterface />,
+      },
       {
         path: "/sign-up",
         element: <SingUpInterface />,

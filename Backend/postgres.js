@@ -56,6 +56,16 @@ const queryEditProfile = async (username, biography, newPicture) => {
 };
 
 //////////////// global?
+const queryRetrieveAllPosts = async () => {
+  try {
+    const query = "SELECT * FROM posts";
+    const result = await client.query(query);
+    return result.rows;
+  } catch (err) {
+    console.error("Error executing query", err);
+  }
+};
+
 const queryRetrievePostsbyUsername = async (username) => {
   try {
     const query = "SELECT * FROM posts WHERE username = $1";
@@ -170,4 +180,5 @@ module.exports = {
   queryUpdatePost,
   queryDeletePost,
   queryRetrievePostsbyUsername,
+  queryRetrieveAllPosts,
 };
