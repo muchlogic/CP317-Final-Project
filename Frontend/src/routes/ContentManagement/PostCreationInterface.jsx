@@ -9,52 +9,102 @@ import {
 import { useState, useEffect } from "react";
 
 export default function PostCreationInterface() {
-  const [title, setTitle] = useState("");
+  const [postTitle, setPostTitle] = useState("");
   const [description, setDescription] = useState("");
   const [nutritionFacts, setNutritionFacts] = useState("");
-
-  const [file, setFile] = useState(null);
-  const [message, setMessage] = useState("");
+  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  const createPost = async () => {
-    if (!file) {
-      setMessage("Please select a file first!");
-      return;
+  // helpers to display error messages
+  const errors = [
+    "Title cannot be empty",
+    "Description cannot be empty",
+    "Nutritional facts cannot be empty",
+    "Image cannot be empty",
+  ];
+  const [titleError, setTitleError] = useState(false);
+  const [titleErrorText, setTitleErrorText] = useState("");
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [descriptionErrorText, setDescriptionErrorText] = useState("");
+  const [nutritionFactsError, setNutritionFactsError] = useState(false);
+  const [nutritionFactsErrorText, setNutritionFactsErrorText] = useState("");
+  const [imageError, setImageError] = useState(false);
+  const [imageErrorText, setImageErrorText] = useState("");
+
+  const displayError = () => {
+    // Title validation
+    if (postTitle === "") {
+      setTitleError(true);
+      setTitleErrorText(errors[0]);
+    } else {
+      setTitleError(false);
+      setTitleErrorText("");
     }
 
-    const formData = new FormData();
-    formData.append("image", file);
+    // Description validation
+    if (description === "") {
+      setDescriptionError(true);
+      setDescriptionErrorText(errors[1]);
+    } else {
+      setDescriptionError(false);
+      setDescriptionErrorText("");
+    }
 
-    // try {
-    //   const response = await fetch("http://localhost:5000/upload", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
+    // Nutritional facts validation
+    if (nutritionFacts === "") {
+      setNutritionFactsError(true);
+      setNutritionFactsErrorText(errors[2]);
+    } else {
+      setNutritionFactsError(false);
+      setNutritionFactsErrorText("");
+    }
 
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     setMessage(data.message);
-    //   } else {
-    //     setMessage("Error uploading file.");
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    //   setMessage("Error uploading file.");
-    // }
+    // Image validation
+    if (image == null) {
+      setImageError(true);
+      setImageErrorText(errors[3]);
+    } else {
+      setImageError(false);
+      setImageErrorText("");
+    }
   };
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+  const createPost = async () => {
+    const jsonData = new FormData();
+    jsonData.append("image", image);
+    jsonData.append("postTitle", postTitle);
+    jsonData.append("description", description);
+    jsonData.append("nutritionFacts", nutritionFacts);
+    jsonData.append("username", "temp");
+
+    displayError();
+
+    fetch("http://localhost:3000/posts/upload", {
+      method: "POST",
+      body: jsonData,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const handleImageChange = (event) => {
+    const selectedImage = event.target.files[0];
+    setImage(selectedImage);
 
     // Generate a preview using FileReader
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result);
     };
-    if (selectedFile) {
-      reader.readAsDataURL(selectedFile);
+    if (selectedImage) {
+      reader.readAsDataURL(selectedImage);
     } else {
       setPreview(null);
     }
@@ -70,8 +120,10 @@ export default function PostCreationInterface() {
           id="outlined-basic"
           variant="outlined"
           label="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={postTitle}
+          error={titleError}
+          helperText={titleErrorText}
+          onChange={(e) => setPostTitle(e.target.value)}
           sx={{ width: "40%" }}
         />
         <Box
@@ -87,7 +139,8 @@ export default function PostCreationInterface() {
             <Typography variant="h4" sx={{ mb: 1 }}>
               Upload Image
             </Typography>
-            <Input type="file" accept="image/*" onChange={handleFileChange} />
+            <Typography color="error">{imageErrorText}</Typography>
+            <Input type="file" accept="image/*" onChange={handleImageChange} />
           </Box>
 
           <img
@@ -104,9 +157,12 @@ export default function PostCreationInterface() {
           multiline
           minRows={3}
           value={description}
+          error={descriptionError}
+          helperText={descriptionErrorText}
           onChange={(e) => setDescription(e.target.value)}
           sx={{ width: "100%" }}
         />
+
         <TextField
           id="outlined-basic"
           variant="outlined"
@@ -114,6 +170,8 @@ export default function PostCreationInterface() {
           multiline
           minRows={3}
           value={nutritionFacts}
+          error={nutritionFactsError}
+          helperText={nutritionFactsErrorText}
           onChange={(e) => setNutritionFacts(e.target.value)}
           sx={{ width: "100%" }}
         />
