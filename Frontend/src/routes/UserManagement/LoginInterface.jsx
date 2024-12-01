@@ -2,12 +2,15 @@ import { Container } from "@mui/material";
 import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { alignProperty } from "@mui/material/styles/cssUtils";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginInterface() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [loginErrorText, setLoginErrorText] = useState("");
+
+  const navigate = useNavigate();
 
   const displayError = () => {
     // Login error validation
@@ -32,8 +35,7 @@ export default function LoginInterface() {
         // Successful login
         const data = await response.json();
         if (data.user == null) displayError(); // Clear error on success
-        console.log (data.user)
-
+        navigate("/"); // redirect to main feed interface
       }
     } catch (err) {
       console.error("", err);
