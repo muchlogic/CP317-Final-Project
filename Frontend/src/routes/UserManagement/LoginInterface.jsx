@@ -33,6 +33,7 @@ export default function LoginInterface() {
         const data = await response.json();
         if (data.user == null) displayError(); // Clear error on success
         console.log (data.user)
+
       }
     } catch (err) {
       console.error("", err);
