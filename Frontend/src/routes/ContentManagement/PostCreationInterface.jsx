@@ -94,6 +94,7 @@ export default function PostCreationInterface() {
       });
   };
 
+  // helper to generate preview of image to display for the user
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
     setImage(selectedImage);

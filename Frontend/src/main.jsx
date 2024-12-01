@@ -11,6 +11,7 @@ import EditProfileInterface from "./routes/UserManagement/EditProfileInterface";
 import GlobalInterface from "./routes/GlobalInterface";
 import PostCreationInterface from "./routes/ContentManagement/PostCreationInterface";
 import MainFeedInterface from "./routes/SocialInteraction/MainFeedInterface";
+import PostEditingInterface from "./routes/ContentManagement/PostEditingInterface";
 
 const theme = createTheme({
   typography: {
@@ -37,8 +38,9 @@ const router = createBrowserRouter([
         element: <LoginInterface />,
       },
       { path: "/create-post", element: <PostCreationInterface /> },
+      { path: "/edit-post/:id", element: <PostEditingInterface /> },
       {
-        path: "/view-post",
+        path: "/view-post/:id",
         element: <ViewPostInterface />,
       },
       {

@@ -30,16 +30,17 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   }
 });
 
-router.put("/update", async (req, res) => {
+router.put("/update", upload.single("image"), async (req, res) => {
   try {
-    const { postTitle, description, nutritionFacts, image, username, postID } =
+    const { buffer, mimetype } = req.file;
+    const { postTitle, description, nutritionFacts, username, postID } =
       req.body;
-
     await queryUpdatePost(
       postTitle,
       description,
       nutritionFacts,
-      image,
+      buffer,
+      mimetype,
       username,
       postID
     );
