@@ -6,18 +6,18 @@ const {
   queryEditProfile,
 } = require("../postgres");
 
-// router.post("/sign-up", async (req, res) => {
-//   try {
-//     const { email, username, password } = req.body;
+router.post("/sign-up", async (req, res) => {
+  try {
+    const { email, username, password } = req.body;
 
-//     await querySignUpUser(email, username, password);
+    await querySignUpUser(email, username, password);
 
-//     res.status(201).json("Sucessfully created account");
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
+    res.status(201).json("Sucessfully created account");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 router.get("/login", async (req, res) => {
   try {

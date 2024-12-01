@@ -65,6 +65,16 @@ const queryRetrieveAllPosts = async () => {
     console.error("Error executing query", err);
   }
 };
+const queryRetrievePostbyID = async (postID) => {
+  try {
+    const query = "SELECT * FROM posts WHERE id = $1";
+    const values = [postID];
+    const result = await client.query(query, values);
+    return result.rows[0];
+  } catch (err) {
+    console.error("Error executing query", err);
+  }
+};
 
 const queryRetrievePostsbyUsername = async (username) => {
   try {
@@ -110,17 +120,19 @@ const queryUpdatePost = async (
   description,
   nutritionFacts,
   image,
+  mimetype,
   username,
   postID
 ) => {
   try {
     const query =
-      "UPDATE posts SET title = $1, description = $2, nutritionFacts = $3, image = $4 WHERE username = $5 and id = $6";
+      "UPDATE posts SET title = $1, description = $2, nutritionFacts = $3, image = $4, mimetype=$5 WHERE username = $6 and id = $7";
     const values = [
       postTitle,
       description,
       nutritionFacts,
       image,
+      mimetype,
       username,
       postID,
     ];
@@ -181,4 +193,5 @@ module.exports = {
   queryDeletePost,
   queryRetrievePostsbyUsername,
   queryRetrieveAllPosts,
+  queryRetrievePostbyID,
 };

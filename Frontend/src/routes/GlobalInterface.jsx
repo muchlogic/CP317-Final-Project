@@ -4,13 +4,15 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import logoImg from "./../public/logo.png";
 export default function GlobalInterface() {
   const navigate = useNavigate();
+
   return (
     <>
       <Box sx={{}} className="bg-[url(./public/background.jpg)]">
         <div className="w-[100%] h-[80px] bg-white fixed top-0 z-10 flex justify-center border-2 border-black">
-          <img src="src/public/logo.png"></img>
+          <img src={logoImg} />
         </div>
         <Container
           maxWidth="md"
@@ -21,7 +23,7 @@ export default function GlobalInterface() {
           }}
           disableGutters
         >
-          <Box sx={{ px: 2, pb: 2, mb: "8vh", minHeight: "92vh" }}>
+          <Box sx={{ px: 2, pb: 2, mb: "8vh", minHeight: "82vh" }}>
             <Outlet />
           </Box>
           <Box
@@ -69,6 +71,7 @@ export default function GlobalInterface() {
                       boxShadow: "none",
                     },
                   }}
+                  onClick={() => navigate("profile")}
                 >
                   <AccountBoxIcon sx={{ fontSize: 40 }} />
                 </IconButton>

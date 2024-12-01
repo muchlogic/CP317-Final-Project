@@ -1,8 +1,10 @@
 import { TextField, Box, Button, Container, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { useNavigate } from "react-router-dom";
 
 export default function MainFeedInterface() {
+  const navigate = useNavigate();
   const [userPosts, setUserPosts] = useState([]);
   const retrieveAllPosts = async () => {
     fetch(`http://localhost:3000/global/retrieve-all-posts`, {
@@ -23,8 +25,6 @@ export default function MainFeedInterface() {
     retrieveAllPosts();
   }, []);
 
-  console.log(userPosts[0]);
-
   return (
     <>
       <Box
@@ -43,6 +43,7 @@ export default function MainFeedInterface() {
               <button
                 key={index}
                 className="flex flex-col items-center w-[80%] border-2 border-black px-5 pt-4 pb-20"
+                onClick={() => navigate(`/view-post/${post.id}`)}
               >
                 <Box
                   sx={{
