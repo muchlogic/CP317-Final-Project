@@ -21,17 +21,19 @@ const loginUser = async (event) => {
       },
       body: JSON.stringify({username, password }),
 
-    })
-    if (response.ok) {
-      // Successful login
-      console.log("Success");
-      displayError("");
-    } else {
-      const errorReason = await response.json();
-      if (errorReason.message === "Invalid Password") {
-        displayError("Password does not match associated email.");
-      } else if (errorReason.message === "Invalid Username") {
-        displayError("Must be a username that exists in the database.");
+    try {
+      const response = await fetch("http://localhost:3000/users/login", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      if (response.ok) {
+        // Successful login
+        console.log("Success");
+        setError("");
+
       } else {
         displayError("Invalid");
       }
