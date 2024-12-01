@@ -24,7 +24,7 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     const user = await queryLoginUser(username, password);
-    console.log (user)
+    console.log(user);
     if (user)
       res.status(201).json({ message: "Logged in sucessfully", user: user });
     else
