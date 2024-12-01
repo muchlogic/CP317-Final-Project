@@ -31,8 +31,9 @@ export default function LoginInterface() {
       if (response.ok) {
         // Successful login
         const data = await response.json();
-        if (data.data == null) displayError(); // Clear error on success
-        console.log(data);
+        if (data.user == null) displayError(); // Clear error on success
+        console.log (data.user)
+
       }
     } catch (err) {
       console.error("", err);
