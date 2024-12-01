@@ -19,7 +19,7 @@ const {
 //   }
 // });
 
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -29,7 +29,7 @@ router.get("/login", async (req, res) => {
     else
       res
         .status(201)
-        .json({ message: "Login information is incorrect", user: NULL });
+        .json({ message: "Login information is incorrect", user: null });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

@@ -7,40 +7,40 @@ import {alignProperty} from "@mui/material/styles/cssUtils";
 export default function LoginInterface() {
 const [username, setUsername] = useState("")
 const [password, setPassword] = useState("")
-const [error, displayError] = useState("")
+const [loginError, setLoginError] = useState(false)
+const [loginErrorText, setLoginErrorText] = useState("")
+
+const displayError = () => { 
+
+  // Login error validation
+
+  setLoginError(true)
+  setLoginErrorText("Invalid username or password")
+  
+   
+}
 
 const loginUser = async (event) => {
   event.preventDefault();
 
   try {
-    const response = await fetch("http:localhost:3000/users/login", {
-      method: "GET",
+    const response = await fetch("http://localhost:3000/user/login", {
+      method: "POST", // Use POST for sending credentials
       headers: {
         "Content-Type": "application/json",
-
       },
-      body: JSON.stringify({username, password }),
+      body: JSON.stringify({ username, password }),
+    });
 
-    try {
-      const response = await fetch("http://localhost:3000/users/login", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      if (response.ok) {
-        // Successful login
-        console.log("Success");
-        setError("");
-
-      } else {
-        displayError("Invalid");
-      }
+    if (response.ok) {
+      // Successful login
+      const data = await response.json();
+      if (data.data == null)
+      displayError(); // Clear error on success
     }
-  } catch (error) {
-    console.error("Error during login:", error);
-    displayError("Invalid username or password");
+  } catch (err) {
+    console.error("", err);
+    
   }
 };
   return (
@@ -49,15 +49,14 @@ const loginUser = async (event) => {
   <Container className="flex justify-center items-center h-[100vh]">
       <form onSubmit={loginUser} className="space-y-4">
         <h1 className="text-3xl font-bold"style={{marginBottom:"25px"}}>Login</h1>
-       {error && <p className="text-red-500">{error}</p>}
 
         <div className="input-box space-y-4">
         <TextField 
-        id="username" label="Username" variant="outlined" required value={username}
+        id="username" label="Username" variant="outlined" error = {loginError} required value={username}
         onChange={(e) => setUsername(e.target.value)}
         />
           <div className="input-box">
-          <TextField id="password" label="Password" variant="outlined" type="password" required value={password}
+          <TextField id="password" label="Password" error = {loginError} helperText = {loginErrorText} variant="outlined" type="password" required value={password}
           onChange={(e) => setPassword(e.target.value)}/>
 
           </div>
