@@ -12,7 +12,7 @@ export default function LoginInterface() {
     event.preventDefault();
 
     try {
-      const response = await fetch("/users/login", {
+      const response = await fetch("http://localhost:3000/users/login", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
