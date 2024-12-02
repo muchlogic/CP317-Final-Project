@@ -7,12 +7,27 @@ import {
   Button,
 } from "@mui/material";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function PostCreationInterface() {
+  const navigate = useNavigate();
+
+  // attributes
   const [postTitle, setPostTitle] = useState("");
   const [description, setDescription] = useState("");
   const [nutritionFacts, setNutritionFacts] = useState("");
   const [image, setImage] = useState(null);
+
+  // initialization
+  useEffect(() => {
+    // user is not logged in and has no access to this interface
+    const username = localStorage.getItem("username");
+    if (username == null) {
+      navigate("/login");
+    }
+  });
+
+  // helper to display preview of uploaded image
   const [preview, setPreview] = useState(null);
 
   // helpers to display error messages
@@ -75,7 +90,7 @@ export default function PostCreationInterface() {
     jsonData.append("postTitle", postTitle);
     jsonData.append("description", description);
     jsonData.append("nutritionFacts", nutritionFacts);
-    jsonData.append("username", "temp");
+    jsonData.append("username", localStorage.getItem("username"));
 
     displayError();
 
@@ -87,7 +102,7 @@ export default function PostCreationInterface() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        navigate(`/view-post/${data.postID}`);
       })
       .catch((error) => {
         console.error("Error:", error);

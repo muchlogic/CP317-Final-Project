@@ -12,10 +12,22 @@ import { useNavigate } from "react-router-dom";
 export default function PostEditingInterface() {
   const navigate = useNavigate();
 
+  // attributes
   const [postTitle, setPostTitle] = useState("");
   const [description, setDescription] = useState("");
   const [nutritionFacts, setNutritionFacts] = useState("");
   const [image, setImage] = useState(null);
+
+  // initialization
+  useEffect(() => {
+    // user is not logged in and has no access to this interface
+    const username = localStorage.getItem("username");
+    if (username == null) {
+      navigate("/login");
+    }
+  });
+
+  // helper to display image to user to preview
   const [preview, setPreview] = useState(null);
 
   // helpers to display error messages
@@ -81,6 +93,11 @@ export default function PostEditingInterface() {
   const currentPath = window.location.pathname; // get current url path
   const postID = currentPath.split("/").filter(Boolean).pop(); // retrieve value after last '/' for postID
 
+  // initialization
+  useEffect(() => {
+    retrievePostByID();
+  }, []);
+
   const retrievePostByID = async () => {
     fetch(`http://localhost:3000/global/retrieve-by-id/${postID}`, {
       method: "GET",
@@ -103,10 +120,9 @@ export default function PostEditingInterface() {
       });
   };
 
-  useEffect(() => {
-    retrievePostByID();
-  }, []);
-
+  // helper function required to convert the retrieved image back into a file type to ensure compliance with database
+  // ex. database recieves image as a file, so it must be of file type. If the user does not change or upload a new file,
+  // the previous image must be converted to a file type
   const base64ToFile = (base64String, mimeType) => {
     // Remove the data URL part
     const base64Data = base64String.split(",")[1];
@@ -135,7 +151,7 @@ export default function PostEditingInterface() {
     jsonData.append("postTitle", postTitle);
     jsonData.append("description", description);
     jsonData.append("nutritionFacts", nutritionFacts);
-    jsonData.append("username", "temp");
+    jsonData.append("username", localStorage.getItem("username"));
     jsonData.append("postID", postID);
 
     if (displayError() == false) {
@@ -156,6 +172,7 @@ export default function PostEditingInterface() {
     }
   };
 
+  // helper function to display image to user to preview
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
     setImage(selectedImage);

@@ -14,7 +14,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
     const { buffer, mimetype } = req.file;
     const { postTitle, description, nutritionFacts, username } = req.body;
 
-    await queryUploadPost(
+    const post = await queryUploadPost(
       postTitle,
       description,
       nutritionFacts,
@@ -23,7 +23,9 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       username
     );
 
-    res.status(201).json({ message: "Post created successfully" });
+    res
+      .status(201)
+      .json({ message: "Post created successfully", postID: post.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

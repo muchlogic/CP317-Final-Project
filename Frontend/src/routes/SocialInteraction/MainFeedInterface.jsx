@@ -4,8 +4,16 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useNavigate } from "react-router-dom";
 
 export default function MainFeedInterface() {
-  const navigate = useNavigate();
+  // attributes
   const [userPosts, setUserPosts] = useState([]);
+
+  const navigate = useNavigate();
+
+  // initialization
+  useEffect(() => {
+    retrieveAllPosts();
+  }, []);
+
   const retrieveAllPosts = async () => {
     fetch(`http://localhost:3000/global/retrieve-all-posts`, {
       method: "GET",
@@ -14,16 +22,12 @@ export default function MainFeedInterface() {
         return response.json();
       })
       .then((data) => {
-        setUserPosts(data.data);
+        setUserPosts(data.data.reverse());
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-
-  useEffect(() => {
-    retrieveAllPosts();
-  }, []);
 
   return (
     <>

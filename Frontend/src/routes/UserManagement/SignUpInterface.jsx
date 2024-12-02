@@ -4,40 +4,47 @@ import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function SingUpInterface() {
+  // attributes
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+
+  const navigate = useNavigate();
+
+  // error handlers and helpers
+  const errors = [
+    "Invalid Password: Must be at least 8 characters long, contain 1 uppercase letter, and 1 number",
+    "Invalid Email: Must follow the format xxx@yyy.com",
+    "Invalid Username: Username cannot be empty",
+  ];
   const [signUpError, setSignUpError] = useState(false);
   const [signUpErrorText, setSignUpErrorText] = useState("");
-  const navigate = useNavigate()
-
   const displayError = () => {
     const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // format for emails
     const passwordReg = /^(?=.*[A-Z])(?=.*\d).{8,}$/; // 8+ characters, 1 uppercase letter, 1 number
 
     if (!passwordReg.test(password)) {
-      setSignUpError(true)
-      setSignUpErrorText(
-        "Invalid Password: Must be at least 8 characters long, contain 1 uppercase letter, and 1 number"
-      );
+      // password fails criteria
+      setSignUpError(true);
+      setSignUpErrorText(errors[0]);
       return false;
     }
     if (!emailReg.test(email)) {
-      setSignUpError(true)
-      setSignUpErrorText("Invalid Email: Must follow the format xxx@yyy.com");
+      // email fails format
+      setSignUpError(true);
+      setSignUpErrorText(errors[1]);
       return false;
     }
     if (!username.trim()) {
-      setSignUpError(true)
-      setSignUpErrorText("Invalid Username: Username cannot be empty");
+      // username is empty
+      setSignUpError(true);
+      setSignUpErrorText(errors[2]);
       return false;
     }
     setSignUpError(true);
     setSignUpError("");
     return true;
   };
-
-
 
   const signUpUser = async (event) => {
     event.preventDefault();
@@ -53,12 +60,11 @@ export default function SingUpInterface() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, email, password }),
-      
       });
 
       if (response.ok) {
         const data = await response.json();
-        navigate ("/login")
+        navigate("/login");
       }
     } catch (error) {
       console.error("", error);
@@ -67,7 +73,7 @@ export default function SingUpInterface() {
 
   return (
     <>
-      <Container className="flex justify-center items-center h-[100vh]">
+      <Container className="flex justify-center items-center h-[80vh]">
         <form onSubmit={signUpUser} className="space-y-4">
           <h1 className="text-3xl font-bold" style={{ marginBottom: "25px" }}>
             Sign Up
@@ -79,8 +85,7 @@ export default function SingUpInterface() {
               label="Email"
               variant="outlined"
               error={signUpError}
-              sx={{width: "300px"}}
-
+              sx={{ width: "300px" }}
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -92,8 +97,7 @@ export default function SingUpInterface() {
               label="Username"
               variant="outlined"
               error={signUpError}
-              sx={{width: "300px"}}
-
+              sx={{ width: "300px" }}
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -107,8 +111,7 @@ export default function SingUpInterface() {
                 type="password"
                 error={signUpError}
                 helperText={signUpErrorText}
-                sx={{width: "300px"}}
-                
+                sx={{ width: "300px" }}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

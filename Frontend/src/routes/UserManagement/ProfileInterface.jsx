@@ -1,9 +1,25 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import {
+  Link,
+  UNSAFE_getPatchRoutesOnNavigationFunction,
+  useNavigate,
+} from "react-router-dom";
 
 export default function ProfileInterface() {
+  // attributes
   const [userInformation, setUserInformation] = useState(null);
+
+  const navigate = useNavigate();
+
+  // initialization
+  useEffect(() => {
+    // user is not logged in and has no access to this interface
+    const username = localStorage.getItem("username");
+    if (username == null) {
+      navigate("/login");
+    }
+  });
 
   const userProfile = {
     username: "Your mom",

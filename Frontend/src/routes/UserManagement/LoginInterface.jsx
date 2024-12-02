@@ -5,18 +5,18 @@ import { alignProperty } from "@mui/material/styles/cssUtils";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginInterface() {
+  // attributes
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [loginErrorText, setLoginErrorText] = useState("");
 
   const navigate = useNavigate();
-
+  const errors = ["Invalid username or password"];
   const displayError = () => {
     // Login error validation
-
     setLoginError(true);
-    setLoginErrorText("Invalid username or password");
+    setLoginErrorText(errors[0]);
   };
 
   const loginUser = async (event) => {
@@ -34,8 +34,14 @@ export default function LoginInterface() {
       if (response.ok) {
         // Successful login
         const data = await response.json();
-        if (data.user == null) displayError(); // Clear error on success
-        navigate("/"); // redirect to main feed interface
+        if (data.user == null) displayError();
+        else {
+          // store user data in local storage to allow access to other services
+          localStorage.setItem("username", data.user.username);
+          localStorage.setItem("email", data.user.email);
+          localStorage.setItem("password", data.user.password);
+          navigate("/"); // redirect to main feed interface
+        }
       }
     } catch (err) {
       console.error("", err);
@@ -43,7 +49,7 @@ export default function LoginInterface() {
   };
   return (
     <>
-      <Container className="flex justify-center items-center h-[100vh]">
+      <Container className="flex justify-center items-center h-[80vh]">
         <form onSubmit={loginUser} className="space-y-4">
           <h1 className="text-3xl font-bold" style={{ marginBottom: "25px" }}>
             Login

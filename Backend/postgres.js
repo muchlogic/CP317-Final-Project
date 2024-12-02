@@ -99,7 +99,7 @@ const queryUploadPost = async (
 ) => {
   try {
     const query =
-      "INSERT INTO posts(title, description, nutritionFacts, image, mimetype, username) VALUES ($1,$2,$3,$4,$5,$6)";
+      "INSERT INTO posts(title, description, nutritionFacts, image, mimetype, username) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *";
     const values = [
       postTitle,
       description,
@@ -110,6 +110,7 @@ const queryUploadPost = async (
     ];
     const result = await client.query(query, values);
     console.log("Uploaded post");
+    return result.rows[0];
   } catch (err) {
     console.error("Error executing query", err);
   }
