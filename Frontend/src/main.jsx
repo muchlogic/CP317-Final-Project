@@ -12,6 +12,7 @@ import GlobalInterface from "./routes/GlobalInterface";
 import PostCreationInterface from "./routes/ContentManagement/PostCreationInterface";
 import MainFeedInterface from "./routes/SocialInteraction/MainFeedInterface";
 import PostEditingInterface from "./routes/ContentManagement/PostEditingInterface";
+import ViewOtherProfileInterface from "./routes/SocialInteraction/ViewOtherProfileInterface";
 
 const theme = createTheme({
   typography: {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/edit-profile",
         element: <EditProfileInterface />,
+      },
+      {
+        path: "/view-other-profile",
+        element: <ViewOtherProfileInterface/>,
       },
     ],
   },
