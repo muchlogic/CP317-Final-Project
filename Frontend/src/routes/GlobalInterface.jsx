@@ -71,7 +71,7 @@ export default function GlobalInterface() {
                       boxShadow: "none",
                     },
                   }}
-                  onClick={() => navigate("profile")}
+                  onClick={() => navigate("self-profile")}
                 >
                   <AccountBoxIcon sx={{ fontSize: 40 }} />
                 </IconButton>

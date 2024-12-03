@@ -44,12 +44,13 @@ const queryLoginUser = async (username, password) => {
   }
 };
 
-const queryEditProfile = async (username, biography, newPicture) => {
+const queryEditProfile = async (username, biography, newPicture, mimetype) => {
   try {
     const query =
-      "UPDATE rooms SET biography = $1, picture = $2 WHERE username = $3";
-    const values = [biography, newPicture, username];
+      "UPDATE users SET biography = $1, picture = $2, mimetype = $3 WHERE username = $4 RETURNING *";
+    const values = [biography, newPicture, mimetype, username];
     const result = await client.query(query, values);
+    return result.rows[0];
   } catch (err) {
     console.error("Error executing query", err);
   }

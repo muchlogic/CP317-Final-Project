@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         element: <ViewPostInterface />,
       },
       {
-        path: "/profile",
+        path: "/self-profile",
         element: <ProfileInterface />,
       },
       {

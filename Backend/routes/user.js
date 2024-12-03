@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
+const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
-const mime = require("mime");
+const upload = multer({ storage: multer.memoryStorage() });
 
 const {
   querySignUpUser,
@@ -36,10 +36,13 @@ router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await queryLoginUser(username, password);
-    if (user)
+    let user = await queryLoginUser(username, password);
+
+    if (user) {
+      const base64Image = Buffer.from(user.picture).toString("base64");
+      user.picture = base64Image;
       res.status(201).json({ message: "Logged in sucessfully", user: user });
-    else
+    } else
       res
         .status(201)
         .json({ message: "Login information is incorrect", user: null });
@@ -49,14 +52,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.put("/edit-profile", async (req, res) => {
+router.put("/edit-profile", upload.single("image"), async (req, res) => {
   try {
-    const { username, biography, newPicture } = req.body;
+    const { buffer, mimetype } = req.file;
+    const { username, biography } = req.body;
 
-    // get newImage through file upload
-    await queryEditProfile(biography, newPicture);
+    let user = await queryEditProfile(username, biography, buffer, mimetype);
+    const base64Image = Buffer.from(user.picture).toString("base64");
+    user.picture = base64Image;
 
-    res.status(201).json({ message: "Edits to profile saved" });
+    res.status(201).json({ message: "Edits to profile saved", user: user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

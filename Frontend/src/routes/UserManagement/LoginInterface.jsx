@@ -40,7 +40,14 @@ export default function LoginInterface() {
           localStorage.setItem("username", data.user.username);
           localStorage.setItem("email", data.user.email);
           localStorage.setItem("password", data.user.password);
-
+          localStorage.setItem("biography", data.user.biography);
+          localStorage.setItem("picture", data.user.picture);
+          localStorage.setItem("mimetype", data.user.mimetype);
+          localStorage.setItem(
+            "following",
+            JSON.stringify(data.user.following)
+          );
+          localStorage.setItem("follows", JSON.stringify(data.user.follows));
           navigate("/"); // redirect to main feed interface
         }
       }
