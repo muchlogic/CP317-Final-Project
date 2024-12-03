@@ -9,6 +9,10 @@ export default function MainFeedInterface() {
 
   const navigate = useNavigate();
 
+  const viewPost = (postID) => {
+    navigate(`/view-post/${postID}`);
+  };
+
   // initialization
   useEffect(() => {
     retrieveAllPosts();
@@ -47,7 +51,7 @@ export default function MainFeedInterface() {
               <button
                 key={index}
                 className="flex flex-col items-center w-[80%] border-2 border-black px-5 pt-4 pb-20"
-                onClick={() => navigate(`/view-post/${post.id}`)}
+                onClick={() => viewPost(post.id)}
               >
                 <Box
                   sx={{
