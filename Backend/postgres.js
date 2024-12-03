@@ -19,11 +19,11 @@ client
   });
 
 // User Management Software Interfaces
-const querySignUpUser = async (email, username, password) => {
+const querySignUpUser = async (email, username, password, buffer, mimetype) => {
   try {
     const query =
-      "INSERT INTO users(email, username, password) VALUES ($1,$2,$3)";
-    const values = [email, username, password];
+      "INSERT INTO users(email, username, password, picture, mimetype) VALUES ($1,$2,$3,$4,$5)";
+    const values = [email, username, password, buffer, mimetype];
     const result = await client.query(query, values);
   } catch (err) {
     console.error("Error executing query", err);

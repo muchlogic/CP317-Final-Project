@@ -1,63 +1,101 @@
-import { TextField, Box, Button, Container,Typography } from "@mui/material";
+import { TextField, Box, Button, Container, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 
 export default function ViewPostInterface() {
-  const [comment, setComment] = useState('')
-  const [error, setError] = useState('')
-  const [likeCount, setLikeCount] = useState(0)
-  const [comments, setComments] = useState([])
+  const testData = {
+    title: "Ice Cap",
+    description: "I love ice caps",
+    image: "https://via.placeholder.com/600x400",
+  };
+
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState("");
+  const [likeCount, setLikeCount] = useState(0);
+  const [comments, setComments] = useState([]);
 
   const handleCommentPost = (post, selfUsername, otherUsername) => {
-    if (comment.length > 100){
-      setError('Too many characters')
+    if (comment.length > 100) {
+      setError("Too many characters");
     } else {
-      setError('')
-      setComments([...comments, comment])
-      setComment('')
+      setError("");
+      setComments([...comments, comment]);
+      setComment("");
     }
-  }
+  };
 
   const handleLikePost = (post, selfUsername, otherUsername) => {
-    setLikeCount (likeCount + 1)
-  }
+    setLikeCount(likeCount + 1);
+  };
 
   return (
     <>
       <Container>
         {/* The Post */}
-        <Typography variant="h4">Post Title</Typography>
-        <Box>
-          <img src="https://via.placeholder.com/600x400" alt="Image" style={{ width: '50%', maxHeight: '400px', objectFit: 'cover', marginBottom: '20px' }}></img>
+        <Box className="mb-2">
+          <Typography variant="h4">{testData.title}</Typography>
         </Box>
-        <Typography variant="h6">Description</Typography>
+        <Box className="flex justify-center">
+          <img
+            className="w-[80%] h-[70vh] border-[1px] border-black"
+            src={testData.image}
+            alt="Image"
+          ></img>
+        </Box>
+        <Typography variant="h6">{testData.description}</Typography>
 
         {/* Like Button */}
-        <Box sx={{bgcolor: "grey", width:"8%", marginTop:"100px"}}>
-          <Button type="button" color="black"onClick={handleLikePost}>
+        <Box className="flex items-center mr-3">
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{}}
+            onClick={handleLikePost}
+          >
             Like
           </Button>
-          {likeCount}
+          <Typography className="ml-3">{likeCount}</Typography>
         </Box>
 
         {/* Comment Section */}
         <Typography variant="h6">Comments</Typography>
-        {comments.length > 0 ? (
-          comments.map((c, index) => (
-            <Typography key={index} variant="body2" style={{ margin: '10px 0' }}>
-              {c}
-            </Typography>
-          ))
-        ) : (
-          <Typography variant="body2">
-            No comments
-          </Typography>
-        )}
-        
+        <Box className="border-2 border-solid border-black mb-2">
+          {comments.length > 0 ? (
+            comments.map((c, index) => (
+              <Typography
+                key={index}
+                variant="body2"
+                style={{ margin: "10px 0" }}
+              >
+                {c}
+              </Typography>
+            ))
+          ) : (
+            <Typography variant="body2">No comments</Typography>
+          )}
+        </Box>
 
         {/* Add Comment */}
-        <TextField label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)}>
-        </TextField>
-        <Button onClick={handleCommentPost} style={{marginTop:'10px'}}>Post</Button>
+        <Box>
+          <TextField
+            id="outlined-basic"
+            multiline
+            minRows={3}
+            label="Add a comment"
+            sx={{ width: "100%" }}
+            variant="outlined"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          ></TextField>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{}}
+            onClick={handleCommentPost}
+            style={{ marginTop: "10px" }}
+          >
+            Post Comment
+          </Button>
+        </Box>
       </Container>
     </>
   );

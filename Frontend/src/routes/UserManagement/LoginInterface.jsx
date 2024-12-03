@@ -40,6 +40,7 @@ export default function LoginInterface() {
           localStorage.setItem("username", data.user.username);
           localStorage.setItem("email", data.user.email);
           localStorage.setItem("password", data.user.password);
+
           navigate("/"); // redirect to main feed interface
         }
       }
@@ -54,7 +55,6 @@ export default function LoginInterface() {
           <h1 className="text-3xl font-bold" style={{ marginBottom: "25px" }}>
             Login
           </h1>
-
           <div className="input-box space-y-4">
             <TextField
               id="username"
