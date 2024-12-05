@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ViewPostInterface from "./routes/SocialInteraction/ViewPostInterface";
 import SingUpInterface from "./routes/UserManagement/SignUpInterface";
 import LoginInterface from "./routes/UserManagement/LoginInterface";
-import ProfileInterface from "./routes/UserManagement/ProfileInterface";
+import ViewSelfProfileInterface from "./routes/UserManagement/ViewSelfProfileInterface";
 import EditProfileInterface from "./routes/UserManagement/EditProfileInterface";
 import GlobalInterface from "./routes/GlobalInterface";
 import PostCreationInterface from "./routes/ContentManagement/PostCreationInterface";
@@ -46,15 +46,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/self-profile",
-        element: <ProfileInterface />,
+        element: <ViewSelfProfileInterface />,
       },
       {
         path: "/edit-profile",
         element: <EditProfileInterface />,
       },
       {
-        path: "/view-other-profile",
-        element: <ViewOtherProfileInterface/>,
+        path: "/other-profile/:username",
+        element: <ViewOtherProfileInterface />,
       },
     ],
   },

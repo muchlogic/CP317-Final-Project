@@ -158,7 +158,7 @@ const queryDeletePost = async (username, postID) => {
 const queryOtherUserInformation = async (username) => {
   try {
     const query =
-      "SELECT username, biography, picture, following, follows FROM users WHERE username = $1";
+      "SELECT username, biography, picture, following, followers FROM users WHERE username = $1";
     const values = [username];
     const result = await client.query(query, values);
     const otherProfile = result.rows[0];
@@ -168,8 +168,33 @@ const queryOtherUserInformation = async (username) => {
   }
 };
 
-const queryFollowUser = async (username) => {
+const queryFollowUser = async (selfUsername, otherUsername) => {
   try {
+    const query =
+      "UPDATE users SET followers = array_append(followers, $1) WHERE username = $2";
+    const values = [selfUsername, otherUsername];
+    const result = await client.query(query, values);
+  } catch (err) {
+    console.error("Error executing query", err);
+  }
+};
+
+const queryCommentPost = async (
+  postID,
+  comment,
+  selfUsername,
+  otherUsername
+) => {
+  try {
+    const commentJSON = JSON.stringify({
+      username: selfUsername,
+      comment: comment,
+    });
+    const query =
+      "UPDATE posts SET comments = comments || $1 WHERE username = $2 and id = $3 RETURNING *";
+    const values = [commentJSON, otherUsername, postID];
+    const result = await client.query(query, values);
+    return result.rows[0];
   } catch (err) {
     console.error("Error executing query", err);
   }
@@ -178,7 +203,7 @@ const queryFollowUser = async (username) => {
 const queryLikePost = async (postID, selfUsername, otherUsername) => {
   try {
     const query =
-      "UPDATE posts SET likes = likes + 1, liked = liked || $1 WHERE username = $2 and id = $3";
+      "UPDATE posts SET likes = likes + 1, liked = array_append(liked, $1) WHERE username = $2 and id = $3";
     const values = [selfUsername, otherUsername, postID];
     const result = await client.query(query, values);
   } catch (err) {
@@ -196,4 +221,8 @@ module.exports = {
   queryRetrievePostsbyUsername,
   queryRetrieveAllPosts,
   queryRetrievePostbyID,
+  queryOtherUserInformation,
+  queryFollowUser,
+  queryLikePost,
+  queryCommentPost,
 };

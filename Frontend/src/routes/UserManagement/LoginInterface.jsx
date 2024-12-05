@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { alignProperty } from "@mui/material/styles/cssUtils";
@@ -8,20 +8,21 @@ export default function LoginInterface() {
   // attributes
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState(false);
-  const [loginErrorText, setLoginErrorText] = useState("");
+  const errors = ["Invalid username or password"];
 
   const navigate = useNavigate();
-  const errors = ["Invalid username or password"];
+
+  // error helpers
+
+  const [loginError, setLoginError] = useState(false);
+  const [loginErrorText, setLoginErrorText] = useState("");
   const displayError = () => {
     // Login error validation
     setLoginError(true);
     setLoginErrorText(errors[0]);
   };
 
-  const loginUser = async (event) => {
-    event.preventDefault();
-
+  const loginUser = async (username, password) => {
     try {
       const response = await fetch("http://localhost:3000/user/login", {
         method: "POST", // Use POST for sending credentials
@@ -47,7 +48,10 @@ export default function LoginInterface() {
             "following",
             JSON.stringify(data.user.following)
           );
-          localStorage.setItem("follows", JSON.stringify(data.user.follows));
+          localStorage.setItem(
+            "followers",
+            JSON.stringify(data.user.followers)
+          );
           navigate("/"); // redirect to main feed interface
         }
       }
@@ -55,10 +59,11 @@ export default function LoginInterface() {
       console.error("", err);
     }
   };
+
   return (
     <>
-      <Container className="flex justify-center items-center h-[80vh]">
-        <form onSubmit={loginUser} className="space-y-4">
+      <Container className="flex flex-col justify-center items-center h-[80vh]">
+        <Box>
           <h1 className="text-3xl font-bold" style={{ marginBottom: "25px" }}>
             Login
           </h1>
@@ -89,11 +94,12 @@ export default function LoginInterface() {
               type="submit"
               variant="contained"
               style={{ marginTop: "50px" }}
+              onClick={() => loginUser(username, password)}
             >
               Login
             </Button>
           </div>
-        </form>
+        </Box>
       </Container>
     </>
   );

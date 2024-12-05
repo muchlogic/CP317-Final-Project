@@ -1,47 +1,148 @@
-import { TextField, Box, Button, Container, Typography } from "@mui/material";
+import {
+  TextField,
+  Box,
+  Button,
+  Container,
+  Typography,
+  Divider,
+} from "@mui/material";
+
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ViewPostInterface() {
-  const testData = {
-    title: "Ice Cap",
-    description: "I love ice caps",
-    image: "https://via.placeholder.com/600x400",
+  // attributes
+  const [username, setUsername] = useState("");
+  const [postTitle, setPostTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [nutritionFacts, setNutritionFacts] = useState("");
+  const [image, setImage] = useState(null);
+  const [likes, setLikes] = useState(0);
+  const [liked, setLiked] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [postID, setPostID] = useState(null);
+  const [likeStatus, setLikeStatus] = useState(false);
+  const [comment, setComment] = useState("");
+  const errors = ["Comment should be less than 100 characters"];
+
+  const navigate = useNavigate();
+
+  // error handling/helpers
+  const [commentError, setCommentError] = useState(false);
+  const [commentErrorText, setCommentErrorText] = useState("");
+  const displayError = () => {
+    // Comment validation
+    if (comment.length > 100) {
+      setCommentError(true);
+      setCommentErrorText(errors[0]);
+      return true;
+    } else {
+      setCommentError(false);
+      setCommentErrorText("");
+    }
+    return false;
   };
 
-  const [comment, setComment] = useState("");
-  const [error, setError] = useState("");
-  const [likeCount, setLikeCount] = useState(0);
-  const [comments, setComments] = useState([]);
+  // initialization
+  useEffect(() => {
+    const currentPath = window.location.pathname; // get current url path
+    const postID = currentPath.split("/").filter(Boolean).pop(); // retrieve value after last '/' for postID
+    setPostID(postID);
+    retrievePostByID(postID);
+  }, []);
 
-  const handleCommentPost = (post, selfUsername, otherUsername) => {
-    if (comment.length > 100) {
-      setError("Too many characters");
-    } else {
-      setError("");
-      setComments([...comments, comment]);
-      setComment("");
+  const retrievePostByID = async (postID) => {
+    fetch(`http://localhost:3000/global/retrieve-post-by-id/${postID}`, {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const post = data.data;
+        setPostTitle(post.title);
+        setDescription(post.description);
+        setNutritionFacts(post.nutritionfacts);
+        setLikes(post.likes);
+        setLiked(post.liked);
+        setComments(post.comments);
+        setUsername(post.username);
+        const imageUrl = `data:image/jpeg;base64,${post.image}`;
+        setImage(imageUrl);
+
+        // disable abiltiy for user to like if they have liked before
+        if (post.liked.includes(localStorage.getItem("username"))) {
+          setLikeStatus(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const commentPost = (postID, comment, selfUsername, otherUsername) => {
+    if (!displayError()) {
+      fetch("http://localhost:3000/interact/comment", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postID, comment, selfUsername, otherUsername }),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          retrievePostByID(postID);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     }
   };
 
-  const handleLikePost = (post, selfUsername, otherUsername) => {
-    setLikeCount(likeCount + 1);
+  const likePost = (postID, selfUsername, otherUsername) => {
+    fetch("http://localhost:3000/interact/like", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ postID, selfUsername, otherUsername }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        retrievePostByID(postID);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
     <>
       <Container>
-        {/* The Post */}
-        <Box className="mb-2">
-          <Typography variant="h4">{testData.title}</Typography>
-        </Box>
-        <Box className="flex justify-center">
+        <Typography variant="h2" sx={{ borderBottom: "2px solid #000000" }}>
+          {postTitle}
+        </Typography>
+        <Box className="flex justify-center my-4">
           <img
             className="w-[80%] h-[70vh] border-[1px] border-black"
-            src={testData.image}
+            src={image}
             alt="Image"
           ></img>
         </Box>
-        <Typography variant="h6">{testData.description}</Typography>
+
+        {/* Description Section */}
+        <Box className="flex flex-col">
+          <Button onClick={() => navigate(`/other-profile/${username}`)}>
+            <Typography variant="h6">Creator</Typography>
+            <Typography>{username}</Typography>
+          </Button>
+
+          <Divider />
+        </Box>
 
         {/* Like Button */}
         <Box className="flex items-center mr-3">
@@ -49,28 +150,49 @@ export default function ViewPostInterface() {
             variant="contained"
             color="primary"
             sx={{}}
-            onClick={handleLikePost}
+            disabled={likeStatus}
+            onClick={() =>
+              likePost(postID, localStorage.getItem("username"), username)
+            }
           >
             Like
           </Button>
-          <Typography className="ml-3">{likeCount}</Typography>
+          <Typography>{likes}</Typography>
+        </Box>
+
+        {/* Description Section */}
+        <Box className="flex flex-col">
+          <Typography variant="h6" sx={{}}>
+            Description
+          </Typography>
+          <Typography>{description}</Typography>
+          <Divider />
+        </Box>
+
+        {/* Nutritional Facts Section */}
+        <Box className="flex flex-col">
+          <Typography variant="h6" sx={{}}>
+            Nutritional Facts
+          </Typography>
+
+          <Typography>{nutritionFacts}</Typography>
+          <Divider />
         </Box>
 
         {/* Comment Section */}
         <Typography variant="h6">Comments</Typography>
         <Box className="border-2 border-solid border-black mb-2">
           {comments.length > 0 ? (
-            comments.map((c, index) => (
-              <Typography
-                key={index}
-                variant="body2"
-                style={{ margin: "10px 0" }}
-              >
-                {c}
-              </Typography>
+            comments.map((comment, index) => (
+              <Box key={index}>
+                <Typography>
+                  {comment.username}: {comment.comment}
+                </Typography>
+                <Divider />
+              </Box>
             ))
           ) : (
-            <Typography variant="body2">No comments</Typography>
+            <Typography>No comments</Typography>
           )}
         </Box>
 
@@ -79,9 +201,11 @@ export default function ViewPostInterface() {
           <TextField
             id="outlined-basic"
             multiline
-            minRows={3}
+            rows={2}
             label="Add a comment"
             sx={{ width: "100%" }}
+            error={commentError}
+            helperText={commentErrorText}
             variant="outlined"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
@@ -90,7 +214,14 @@ export default function ViewPostInterface() {
             variant="contained"
             color="primary"
             sx={{}}
-            onClick={handleCommentPost}
+            onClick={() =>
+              commentPost(
+                postID,
+                comment,
+                localStorage.getItem("username"),
+                username
+              )
+            }
             style={{ marginTop: "10px" }}
           >
             Post Comment

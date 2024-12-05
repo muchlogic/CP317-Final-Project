@@ -51,6 +51,7 @@ export default function PostCreationInterface() {
     if (postTitle === "") {
       setTitleError(true);
       setTitleErrorText(errors[0]);
+      return true;
     } else {
       setTitleError(false);
       setTitleErrorText("");
@@ -60,6 +61,7 @@ export default function PostCreationInterface() {
     if (description === "") {
       setDescriptionError(true);
       setDescriptionErrorText(errors[1]);
+      return true;
     } else {
       setDescriptionError(false);
       setDescriptionErrorText("");
@@ -69,6 +71,7 @@ export default function PostCreationInterface() {
     if (nutritionFacts === "") {
       setNutritionFactsError(true);
       setNutritionFactsErrorText(errors[2]);
+      return true;
     } else {
       setNutritionFactsError(false);
       setNutritionFactsErrorText("");
@@ -78,35 +81,43 @@ export default function PostCreationInterface() {
     if (image == null) {
       setImageError(true);
       setImageErrorText(errors[3]);
+      return true;
     } else {
       setImageError(false);
       setImageErrorText("");
     }
+    return false;
   };
 
-  const createPost = async () => {
+  const createPost = async (
+    postTitle,
+    description,
+    nutritionFacts,
+    image,
+    username
+  ) => {
     const jsonData = new FormData();
     jsonData.append("image", image);
     jsonData.append("postTitle", postTitle);
     jsonData.append("description", description);
     jsonData.append("nutritionFacts", nutritionFacts);
-    jsonData.append("username", localStorage.getItem("username"));
+    jsonData.append("username", username);
 
-    displayError();
-
-    fetch("http://localhost:3000/posts/upload", {
-      method: "POST",
-      body: jsonData,
-    })
-      .then((response) => {
-        return response.json();
+    if (!displayError()) {
+      fetch("http://localhost:3000/content/upload", {
+        method: "POST",
+        body: jsonData,
       })
-      .then((data) => {
-        navigate(`/view-post/${data.postID}`);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          navigate(`/view-post/${data.postID}`);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
   };
 
   // helper to generate preview of image to display for the user
@@ -195,7 +206,15 @@ export default function PostCreationInterface() {
           variant="contained"
           color="primary"
           sx={{}}
-          onClick={() => createPost()}
+          onClick={() =>
+            createPost(
+              postTitle,
+              description,
+              nutritionFacts,
+              image,
+              localStorage.getItem("username")
+            )
+          }
         >
           Publish Post
         </Button>

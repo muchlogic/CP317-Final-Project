@@ -8,15 +8,15 @@ export default function SingUpInterface() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-
-  const navigate = useNavigate();
-
-  // error handlers and helpers
   const errors = [
     "Invalid Password: Must be at least 8 characters long, contain 1 uppercase letter, and 1 number",
     "Invalid Email: Must follow the format xxx@yyy.com",
     "Invalid Username: Username cannot be empty",
   ];
+
+  const navigate = useNavigate();
+
+  // error helpers
   const [signUpError, setSignUpError] = useState(false);
   const [signUpErrorText, setSignUpErrorText] = useState("");
   const displayError = () => {
@@ -48,11 +48,9 @@ export default function SingUpInterface() {
 
   const signUpUser = async (event) => {
     event.preventDefault();
-
     if (!displayError()) {
       return;
     }
-
     try {
       const response = await fetch("http://localhost:3000/user/sign-up", {
         method: "POST",

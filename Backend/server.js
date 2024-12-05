@@ -19,8 +19,11 @@ app.use("/global", globalRouter);
 const userRouter = require("./routes/user");
 app.use("/user", userRouter);
 
-const postsRouter = require("./routes/posts");
-app.use("/posts", postsRouter);
+const contentRouter = require("./routes/content");
+app.use("/content", contentRouter);
+
+const interactRouter = require("./routes/interact");
+app.use("/interact", interactRouter);
 
 const server = http.createServer(app);
 

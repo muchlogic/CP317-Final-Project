@@ -24,7 +24,7 @@ router.get("/retrieve-all-posts", async (req, res) => {
   }
 });
 
-router.get("/retrieve-by-id/:postID", async (req, res) => {
+router.get("/retrieve-post-by-id/:postID", async (req, res) => {
   try {
     const postID = req.params.postID;
 
@@ -39,7 +39,7 @@ router.get("/retrieve-by-id/:postID", async (req, res) => {
   }
 });
 
-router.get("/retrieve-by-username/:username", async (req, res) => {
+router.get("/retrieve-posts-by-username/:username", async (req, res) => {
   try {
     const username = req.params.username;
 

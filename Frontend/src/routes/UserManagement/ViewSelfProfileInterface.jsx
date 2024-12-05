@@ -2,10 +2,10 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function ProfileInterface() {
+export default function ViewSelfProfileInterface() {
   // attributes
   const [username, setUsername] = useState("");
-  const [followerCount, setFollowerCount] = useState(0);
+  const [followers, setFollowers] = useState([]);
   const [biography, setBiography] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
@@ -21,19 +21,19 @@ export default function ProfileInterface() {
     } else {
       setUsername(localStorage.getItem("username"));
       setBiography(localStorage.getItem("biography"));
-      setFollowerCount(JSON.parse(localStorage.getItem("follows")).length);
+      setFollowers(JSON.parse(localStorage.getItem("followers")));
+
       const image = localStorage.getItem("picture");
       const imageUrl = `data:image/jpeg;base64,${image}`;
       setProfilePicture(imageUrl);
-      retrievePostsByUsername();
+
+      retrievePostsByUsername(username);
     }
   }, []);
 
-  const retrievePostsByUsername = async () => {
+  const retrievePostsByUsername = async (username) => {
     fetch(
-      `http://localhost:3000/global/retrieve-by-username/${localStorage.getItem(
-        "username"
-      )}`,
+      `http://localhost:3000/global/retrieve-posts-by-username/${username}`,
       {
         method: "GET",
       }
@@ -52,12 +52,12 @@ export default function ProfileInterface() {
   return (
     <>
       <Container>
-        <Box className="min-h-[80vh]">
+        <Box className="">
           <Typography variant="h2" sx={{ borderBottom: "2px solid #000000" }}>
             {username}
           </Typography>
         </Box>
-        <Box className="flex w-full h-[15vh] items-center">
+        <Box className="flex w-full h-[15vh] items-center mt-4">
           <Box className="w-1/3 flex justify-start items-center">
             <img
               className="rounded-full w-20 h-20 object-cover"
@@ -71,7 +71,9 @@ export default function ProfileInterface() {
             >
               Post count
             </Typography>
-            <Typography className="flex justify-center">{0}</Typography>
+            <Typography className="flex justify-center">
+              {userPosts.length}
+            </Typography>
           </Box>
           <Box className="w-1/3">
             <Typography
@@ -81,7 +83,7 @@ export default function ProfileInterface() {
               Follower Count
             </Typography>
             <Typography className="flex justify-center">
-              {followerCount}
+              {followers.length}
             </Typography>
           </Box>
         </Box>
@@ -93,14 +95,19 @@ export default function ProfileInterface() {
             {biography === null ? "No Biography" : biography}
           </Typography>
           <Link to="/edit-profile">
-            <button className="border-2 px-6 py-3 mt-3">Edit Profile</button>
+            <Button variant="outlined" className="border-2 px-6 py-3 mt-3">
+              Edit Profile
+            </Button>
           </Link>
         </Box>
         <Box className="grid grid-rows-2 grid-cols-3 h-[fit] gap-2 mt-16">
-          {userPosts.map((post) => {
+          {userPosts.map((post, index) => {
             const imageUrl = `data:image/jpeg;base64,${post.image}`;
             return (
-              <Button onClick={() => navigate(`/view-post/:${post.id}`)}>
+              <Button
+                key={index}
+                onClick={() => navigate(`/view-post/${post.id}`)}
+              >
                 <img
                   src={imageUrl}
                   alt="Placeholder 1"

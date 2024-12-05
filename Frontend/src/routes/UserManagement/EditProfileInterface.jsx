@@ -10,11 +10,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function EditProfileInterface() {
+  // attributes
+  const [biography, setBiography] = useState("");
+  const [picture, setPicture] = useState(null);
+  const errors = ["Biography cannot be empty", "Image cannot be empty"];
+
   const navigate = useNavigate();
 
-  // attributes
-  const [biography, setBiography] = useState(localStorage.getItem("biography"));
-  const [image, setImage] = useState(null);
+  // helper to display image to user to preview
+  const [preview, setPreview] = useState(null);
 
   // initialization
   useEffect(() => {
@@ -23,17 +27,22 @@ export default function EditProfileInterface() {
     if (username == null) {
       navigate("/login");
     }
-  });
-
-  // helper to display image to user to preview
-  const [preview, setPreview] = useState(null);
+    const picture = localStorage.getItem("picture");
+    const imageUrl = `data:image/jpeg;base64,${picture}`;
+    const imageAsFile = base64ToFile(
+      imageUrl,
+      localStorage.getItem("mimetype")
+    );
+    setBiography(localStorage.getItem("biography"));
+    setPicture(imageAsFile);
+    setPreview(imageUrl);
+  }, []);
 
   // helpers to display error messages
-  const errors = ["Biography cannot be empty", "Image cannot be empty"];
   const [biographyError, setBiographyError] = useState(false);
   const [biographyErrorText, setBiographyErrorText] = useState("");
-  const [imageError, setImageError] = useState(false);
-  const [imageErrorText, setImageErrorText] = useState("");
+  const [pictureError, setPictureError] = useState(false);
+  const [pictureErrorText, setPictureErrorText] = useState("");
 
   const displayError = () => {
     // Biography validation
@@ -47,29 +56,17 @@ export default function EditProfileInterface() {
     }
 
     // Image validation
-    if (image == null) {
-      setImageError(true);
-      setImageErrorText(errors[3]);
+    if (picture == null) {
+      setPictureError(true);
+      setPictureErrorText(errors[3]);
       return true;
     } else {
-      setImageError(false);
-      setImageErrorText("");
+      setPictureError(false);
+      setPictureErrorText("");
     }
 
     return false; // no error
   };
-
-  // initialization
-  useEffect(() => {
-    const image = localStorage.getItem("picture");
-    const imageUrl = `data:image/jpeg;base64,${image}`;
-    const imageAsFile = base64ToFile(
-      imageUrl,
-      localStorage.getItem("mimetype")
-    );
-    setImage(imageAsFile);
-    setPreview(imageUrl);
-  }, []);
 
   // helper function required to convert the retrieved image back into a file type to ensure compliance with database
   // ex. database recieves image as a file, so it must be of file type. If the user does not change or upload a new file,
@@ -95,11 +92,28 @@ export default function EditProfileInterface() {
     return file;
   };
 
-  const editProfile = async () => {
+  // helper function to display image to user to preview
+  const handlePictureChange = (event) => {
+    const selectedImage = event.target.files[0];
+    setPicture(selectedImage);
+
+    // Generate a preview using FileReader
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result);
+    };
+    if (selectedImage) {
+      reader.readAsDataURL(selectedImage);
+    } else {
+      setPreview(null);
+    }
+  };
+
+  const editProfile = async (username, biography, picture) => {
     const jsonData = new FormData();
-    jsonData.append("username", localStorage.getItem("username"));
+    jsonData.append("username", username);
     jsonData.append("biography", biography);
-    jsonData.append("image", image);
+    jsonData.append("image", picture);
 
     if (displayError() == false) {
       // no errors so update post
@@ -122,29 +136,15 @@ export default function EditProfileInterface() {
             "following",
             JSON.stringify(data.user.following)
           );
-          localStorage.setItem("follows", JSON.stringify(data.user.follows));
+          localStorage.setItem(
+            "followers",
+            JSON.stringify(data.user.followers)
+          );
           navigate(`/self-profile`); // redirect to view post interface
         })
         .catch((error) => {
           console.error("Error:", error);
         });
-    }
-  };
-
-  // helper function to display image to user to preview
-  const handleImageChange = (event) => {
-    const selectedImage = event.target.files[0];
-    setImage(selectedImage);
-
-    // Generate a preview using FileReader
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result);
-    };
-    if (selectedImage) {
-      reader.readAsDataURL(selectedImage);
-    } else {
-      setPreview(null);
     }
   };
 
@@ -168,8 +168,12 @@ export default function EditProfileInterface() {
             <Typography variant="h4" sx={{ mb: 1 }}>
               Upload Profile Picture
             </Typography>
-            <Typography color="error">{imageErrorText}</Typography>
-            <Input type="file" accept="image/*" onChange={handleImageChange} />
+            <Typography color="error">{pictureErrorText}</Typography>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handlePictureChange}
+            />
           </Box>
           <img
             src={preview}
@@ -194,7 +198,9 @@ export default function EditProfileInterface() {
           variant="contained"
           color="primary"
           sx={{}}
-          onClick={() => editProfile()}
+          onClick={() =>
+            editProfile(localStorage.getItem("username"), biography, picture)
+          }
         >
           Edit Profile
         </Button>

@@ -17,6 +17,7 @@ export default function PostEditingInterface() {
   const [description, setDescription] = useState("");
   const [nutritionFacts, setNutritionFacts] = useState("");
   const [image, setImage] = useState(null);
+  const [postID, setPostID] = useState(null);
 
   // initialization
   useEffect(() => {
@@ -25,7 +26,11 @@ export default function PostEditingInterface() {
     if (username == null) {
       navigate("/login");
     }
-  });
+    const currentPath = window.location.pathname; // get current url path
+    const postID = currentPath.split("/").filter(Boolean).pop(); // retrieve value after last '/' for postID
+    setPostID(postID);
+    retrievePostByID(postID);
+  }, []);
 
   // helper to display image to user to preview
   const [preview, setPreview] = useState(null);
@@ -90,16 +95,8 @@ export default function PostEditingInterface() {
     return false; // no error
   };
 
-  const currentPath = window.location.pathname; // get current url path
-  const postID = currentPath.split("/").filter(Boolean).pop(); // retrieve value after last '/' for postID
-
-  // initialization
-  useEffect(() => {
-    retrievePostByID();
-  }, []);
-
-  const retrievePostByID = async () => {
-    fetch(`http://localhost:3000/global/retrieve-by-id/${postID}`, {
+  const retrievePostByID = async (postID) => {
+    fetch(`http://localhost:3000/global/retrieve-post-by-id/${postID}`, {
       method: "GET",
     })
       .then((response) => {
@@ -145,33 +142,6 @@ export default function PostEditingInterface() {
     return file;
   };
 
-  const updatePost = async () => {
-    const jsonData = new FormData();
-    jsonData.append("image", image);
-    jsonData.append("postTitle", postTitle);
-    jsonData.append("description", description);
-    jsonData.append("nutritionFacts", nutritionFacts);
-    jsonData.append("username", localStorage.getItem("username"));
-    jsonData.append("postID", postID);
-
-    if (displayError() == false) {
-      // no errors so update post
-      fetch("http://localhost:3000/posts/update", {
-        method: "PUT",
-        body: jsonData,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          navigate(`/view-post/${postID}`); // redirect to view post interface
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
-  };
-
   // helper function to display image to user to preview
   const handleImageChange = (event) => {
     const selectedImage = event.target.files[0];
@@ -186,6 +156,40 @@ export default function PostEditingInterface() {
       reader.readAsDataURL(selectedImage);
     } else {
       setPreview(null);
+    }
+  };
+
+  const updatePost = async (
+    postTitle,
+    description,
+    nutritionFacts,
+    image,
+    username,
+    postID
+  ) => {
+    const jsonData = new FormData();
+    jsonData.append("image", image);
+    jsonData.append("postTitle", postTitle);
+    jsonData.append("description", description);
+    jsonData.append("nutritionFacts", nutritionFacts);
+    jsonData.append("username", username);
+    jsonData.append("postID", postID);
+
+    if (displayError() == false) {
+      // no errors so update post
+      fetch("http://localhost:3000/content/update", {
+        method: "PUT",
+        body: jsonData,
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          navigate(`/view-post/${postID}`); // redirect to view post interface
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     }
   };
 
@@ -256,7 +260,16 @@ export default function PostEditingInterface() {
           variant="contained"
           color="primary"
           sx={{}}
-          onClick={() => updatePost()}
+          onClick={() =>
+            updatePost(
+              postTitle,
+              description,
+              nutritionFacts,
+              image,
+              localStorage.getItem("usermame"),
+              postID
+            )
+          }
         >
           Edit Post
         </Button>
