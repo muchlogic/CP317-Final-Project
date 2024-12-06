@@ -18,6 +18,12 @@ export default function PostEditingInterface() {
   const [nutritionFacts, setNutritionFacts] = useState("");
   const [image, setImage] = useState(null);
   const [postID, setPostID] = useState(null);
+  const errors = [
+    "Title cannot be empty",
+    "Description cannot be empty",
+    "Nutritional facts cannot be empty",
+    "Image cannot be empty",
+  ];
 
   // initialization
   useEffect(() => {
@@ -36,12 +42,6 @@ export default function PostEditingInterface() {
   const [preview, setPreview] = useState(null);
 
   // helpers to display error messages
-  const errors = [
-    "Title cannot be empty",
-    "Description cannot be empty",
-    "Nutritional facts cannot be empty",
-    "Image cannot be empty",
-  ];
   const [titleError, setTitleError] = useState(false);
   const [titleErrorText, setTitleErrorText] = useState("");
   const [descriptionError, setDescriptionError] = useState(false);
