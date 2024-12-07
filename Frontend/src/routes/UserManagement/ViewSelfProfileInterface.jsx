@@ -49,6 +49,12 @@ export default function ViewSelfProfileInterface() {
       });
   };
 
+  const logoutUser = () =>{
+    localStorrage.clear();
+
+    navigate("/login")
+  };
+
   return (
     <>
       <Container>
@@ -99,6 +105,9 @@ export default function ViewSelfProfileInterface() {
               Edit Profile
             </Button>
           </Link>
+          <Button variant="outlined" className="border-2 px-6 py-3 mt-3" onClick={logoutUser}>
+              Logout
+          </Button>
         </Box>
         <Box className="grid grid-rows-2 grid-cols-3 h-[fit] gap-2 mt-16">
           {userPosts.map((post, index) => {
