@@ -124,6 +124,12 @@ export default function SingUpInterface() {
             </Button>
           </div>
         </form>
+
+        <Link to="/login">
+            <Button variant="outlined" className="border-2 px-6 py-3 mt-3">
+              Login
+            </Button>
+        </Link>
       </Container>
     </>
   );
