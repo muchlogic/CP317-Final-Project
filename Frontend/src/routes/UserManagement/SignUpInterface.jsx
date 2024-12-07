@@ -2,6 +2,7 @@ import { Container } from "@mui/material";
 import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function SingUpInterface() {
   // attributes
@@ -71,7 +72,7 @@ export default function SingUpInterface() {
 
   return (
     <>
-      <Container className="flex justify-center items-center h-[80vh]">
+      <Container className="flex flex-col justify-center items-center h-[80vh]">
         <form onSubmit={signUpUser} className="space-y-4">
           <h1 className="text-3xl font-bold" style={{ marginBottom: "25px" }}>
             Sign Up
@@ -122,14 +123,16 @@ export default function SingUpInterface() {
             >
               Sign up
             </Button>
+
+            <Link to="/login">
+              <Button variant="outlined" className="border-2 px-6 py-3 mt-3" style={{ marginTop: "50px", marginLeft: "100px" }}>
+                Login
+              </Button>
+            </Link>
           </div>
         </form>
 
-        <Link to="/login">
-            <Button variant="outlined" className="border-2 px-6 py-3 mt-3">
-              Login
-            </Button>
-        </Link>
+
       </Container>
     </>
   );

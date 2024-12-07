@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { alignProperty } from "@mui/material/styles/cssUtils";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function LoginInterface() {
   // attributes
@@ -98,6 +99,11 @@ export default function LoginInterface() {
             >
               Login
             </Button>
+            <Link to="/sign-up">
+              <Button variant="outlined" className="border-2 px-6 py-3 mt-3" style={{ marginTop: "50px", marginLeft: "40px" }}>
+                Sign up
+              </Button>
+            </Link>
           </div>
         </Box>
       </Container>
