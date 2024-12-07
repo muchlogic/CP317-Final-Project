@@ -140,6 +140,15 @@ export default function ViewPostInterface() {
             <Typography variant="h6">Creator: {username}</Typography>
           </Button>
           <Divider />
+          {username == localStorage.getItem("username") ? (
+            <>
+              <Button onClick={() => navigate(`/edit-post/${postID}`)}>
+                <Typography variant="h6">Edit Post</Typography>
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
         </Box>
 
         {/* Like Button */}

@@ -49,10 +49,9 @@ export default function ViewSelfProfileInterface() {
       });
   };
 
-  const logoutUser = () =>{
+  const logoutUser = () => {
     localStorage.clear();
-
-    navigate("/login")
+    navigate("/login");
   };
 
   return (
@@ -101,12 +100,21 @@ export default function ViewSelfProfileInterface() {
             {biography === null ? "No Biography" : biography}
           </Typography>
           <Link to="/edit-profile">
-            <Button variant="outlined" className="border-2 px-6 py-3 mt-3" sx={{ marginLeft: 30 }}>
+            <Button
+              variant="outlined"
+              className="border-2 px-6 py-3 mt-3"
+              sx={{ marginLeft: 30 }}
+            >
               Edit Profile
-            </Button> 
+            </Button>
           </Link>
-          <Button variant="outlined" className="border-2 px-6 py-3 mt-3" sx={{ marginLeft: 11, marginRight: 11 }} onClick={logoutUser}>
-              Logout
+          <Button
+            variant="outlined"
+            className="border-2 px-6 py-3 mt-3"
+            sx={{ marginLeft: 11, marginRight: 11 }}
+            onClick={logoutUser}
+          >
+            Logout
           </Button>
         </Box>
         <Box className="grid grid-rows-2 grid-cols-3 h-[fit] gap-2 mt-16">
@@ -123,7 +131,7 @@ export default function ViewSelfProfileInterface() {
                   className="w-full h-full object-cover"
                 />
               </Button>
-            ); 
+            );
           })}
         </Box>
       </Container>

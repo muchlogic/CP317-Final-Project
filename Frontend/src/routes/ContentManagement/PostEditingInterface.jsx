@@ -185,7 +185,7 @@ export default function PostEditingInterface() {
           return response.json();
         })
         .then((data) => {
-          navigate(`/view-post/${postID}`); // redirect to view post interface
+          // navigate(`/view-post/${postID}`); // redirect to view post interface
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -266,7 +266,7 @@ export default function PostEditingInterface() {
               description,
               nutritionFacts,
               image,
-              localStorage.getItem("usermame"),
+              localStorage.getItem("username"),
               postID
             )
           }
