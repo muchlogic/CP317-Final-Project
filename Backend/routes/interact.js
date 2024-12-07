@@ -15,7 +15,7 @@ router.get("/retrieve-other-user/:username", async (req, res) => {
     const base64Image = Buffer.from(userData.picture).toString("base64");
     userData.picture = base64Image;
 
-    res.status(201).json({ message: "User Data Retrieved", user: userData });
+    res.status(201).json({ user: userData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

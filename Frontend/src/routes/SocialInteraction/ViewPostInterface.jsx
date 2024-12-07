@@ -6,6 +6,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -134,18 +135,15 @@ export default function ViewPostInterface() {
           ></img>
         </Box>
 
-        {/* Description Section */}
         <Box className="flex flex-col">
           <Button onClick={() => navigate(`/other-profile/${username}`)}>
-            <Typography variant="h6">Creator</Typography>
-            <Typography>{username}</Typography>
+            <Typography variant="h6">Creator: {username}</Typography>
           </Button>
-
           <Divider />
         </Box>
 
         {/* Like Button */}
-        <Box className="flex items-center mr-3">
+        <Box className="flex items-center mt-5">
           <Button
             variant="contained"
             color="primary"
@@ -157,12 +155,14 @@ export default function ViewPostInterface() {
           >
             Like
           </Button>
-          <Typography>{likes}</Typography>
+
+          <Typography sx={{ ml: 2 }}>{likes} - </Typography>
+          <ThumbUpIcon />
         </Box>
 
         {/* Description Section */}
-        <Box className="flex flex-col">
-          <Typography variant="h6" sx={{}}>
+        <Box className="flex flex-col mt-5">
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             Description
           </Typography>
           <Typography>{description}</Typography>
@@ -170,8 +170,8 @@ export default function ViewPostInterface() {
         </Box>
 
         {/* Nutritional Facts Section */}
-        <Box className="flex flex-col">
-          <Typography variant="h6" sx={{}}>
+        <Box className="flex flex-col mt-5">
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             Nutritional Facts
           </Typography>
 
@@ -180,20 +180,24 @@ export default function ViewPostInterface() {
         </Box>
 
         {/* Comment Section */}
-        <Typography variant="h6">Comments</Typography>
-        <Box className="border-2 border-solid border-black mb-2">
-          {comments.length > 0 ? (
-            comments.map((comment, index) => (
-              <Box key={index}>
-                <Typography>
-                  {comment.username}: {comment.comment}
-                </Typography>
-                <Divider />
-              </Box>
-            ))
-          ) : (
-            <Typography>No comments</Typography>
-          )}
+        <Box sx={{ mt: 5 }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Comments
+          </Typography>
+          <Box className="border-2 border-solid border-black mb-2">
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <Box key={index}>
+                  <Typography>
+                    {comment.username}: {comment.comment}
+                  </Typography>
+                  <Divider />
+                </Box>
+              ))
+            ) : (
+              <Typography>No comments</Typography>
+            )}
+          </Box>
         </Box>
 
         {/* Add Comment */}

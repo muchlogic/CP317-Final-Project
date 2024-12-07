@@ -23,9 +23,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       username
     );
 
-    res
-      .status(201)
-      .json({ message: "Post created successfully", postID: post.id });
+    res.status(201).json({ postID: post.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

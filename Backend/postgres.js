@@ -18,6 +18,38 @@ client
     console.error("Error connecting to PostgreSQL database", err);
   });
 
+// global software interfaces
+const queryRetrieveAllPosts = async () => {
+  try {
+    const query = "SELECT * FROM posts";
+    const result = await client.query(query);
+    return result.rows;
+  } catch (err) {
+    console.error("Error executing query", err);
+  }
+};
+const queryRetrievePostbyID = async (postID) => {
+  try {
+    const query = "SELECT * FROM posts WHERE id = $1";
+    const values = [postID];
+    const result = await client.query(query, values);
+    return result.rows[0];
+  } catch (err) {
+    console.error("Error executing query", err);
+  }
+};
+
+const queryRetrievePostsbyUsername = async (username) => {
+  try {
+    const query = "SELECT * FROM posts WHERE username = $1";
+    const values = [username];
+    const result = await client.query(query, values);
+    return result.rows;
+  } catch (err) {
+    console.error("Error executing query", err);
+  }
+};
+
 // User Management Software Interfaces
 const querySignUpUser = async (email, username, password, buffer, mimetype) => {
   try {
@@ -55,39 +87,6 @@ const queryEditProfile = async (username, biography, newPicture, mimetype) => {
     console.error("Error executing query", err);
   }
 };
-
-//////////////// global?
-const queryRetrieveAllPosts = async () => {
-  try {
-    const query = "SELECT * FROM posts";
-    const result = await client.query(query);
-    return result.rows;
-  } catch (err) {
-    console.error("Error executing query", err);
-  }
-};
-const queryRetrievePostbyID = async (postID) => {
-  try {
-    const query = "SELECT * FROM posts WHERE id = $1";
-    const values = [postID];
-    const result = await client.query(query, values);
-    return result.rows[0];
-  } catch (err) {
-    console.error("Error executing query", err);
-  }
-};
-
-const queryRetrievePostsbyUsername = async (username) => {
-  try {
-    const query = "SELECT * FROM posts WHERE username = $1";
-    const values = [username];
-    const result = await client.query(query, values);
-    return result.rows;
-  } catch (err) {
-    console.error("Error executing query", err);
-  }
-};
-////////////////
 
 // Content Management Software Interfaces
 const queryUploadPost = async (
@@ -191,10 +190,9 @@ const queryCommentPost = async (
       comment: comment,
     });
     const query =
-      "UPDATE posts SET comments = comments || $1 WHERE username = $2 and id = $3 RETURNING *";
+      "UPDATE posts SET comments = comments || $1 WHERE username = $2 and id = $3";
     const values = [commentJSON, otherUsername, postID];
     const result = await client.query(query, values);
-    return result.rows[0];
   } catch (err) {
     console.error("Error executing query", err);
   }

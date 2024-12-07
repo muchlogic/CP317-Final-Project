@@ -25,7 +25,7 @@ router.post("/sign-up", async (req, res) => {
 
     await querySignUpUser(email, username, password, buffer, mimetype);
 
-    res.status(201).json("Sucessfully created account");
+    res.status(201).json({ message: "Sucessfully created account" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -61,7 +61,7 @@ router.put("/edit-profile", upload.single("image"), async (req, res) => {
     const base64Image = Buffer.from(user.picture).toString("base64");
     user.picture = base64Image;
 
-    res.status(201).json({ message: "Edits to profile saved", user: user });
+    res.status(201).json({ user: user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

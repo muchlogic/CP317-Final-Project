@@ -47,9 +47,12 @@ export default function ViewOtherProfileInterface() {
   };
 
   const retrievePostsByUsername = async (username) => {
-    fetch(`http://localhost:3000/global/retrieve-by-username/${username}`, {
-      method: "GET",
-    })
+    fetch(
+      `http://localhost:3000/global/retrieve-posts-by-username/${username}`,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => {
         return response.json();
       })
