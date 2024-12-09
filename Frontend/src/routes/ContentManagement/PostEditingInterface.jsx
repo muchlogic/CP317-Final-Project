@@ -185,7 +185,7 @@ export default function PostEditingInterface() {
           return response.json();
         })
         .then((data) => {
-          // navigate(`/view-post/${postID}`); // redirect to view post interface
+          navigate(`/view-post/${postID}`); // redirect to view post interface
         })
         .catch((error) => {
           console.error("Error:", error);
